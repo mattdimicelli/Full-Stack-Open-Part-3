@@ -1,6 +1,7 @@
 const express = require('express');
 
 const app = express();
+app.use(express.json());  
 
 let persons = [
   { 
@@ -26,7 +27,28 @@ let persons = [
 ];
 
 app.get('/api/persons', (req, res) => {
-    res.json(notes);
+    res.json(persons);
+});
+
+app.post('/api/persons', (req, res) => {
+  const { name, number } = req.body;
+  if (name && number) {
+    const entry = { name, number };
+    const id = Math.floor(Math.random() * 10000000);
+    entry.id = id;
+    persons.push(entry);
+    res.json(entry);
+  }
+  else if (!name && !number) {
+    res.status(400).json({ error: 'name and number required'});
+  }
+  else if (!name) {
+    res.status(400).json({ error: 'name required'});
+  }
+  else if (!number) {
+    res.status(400).json({ error: 'number required'});
+  }
+  
 });
 
 app.get('/api/persons/:id', (req, res) => {
