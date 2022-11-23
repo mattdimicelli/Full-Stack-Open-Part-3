@@ -32,7 +32,10 @@ app.get('/api/persons', (req, res) => {
 
 app.post('/api/persons', (req, res) => {
   const { name, number } = req.body;
-  if (name && number) {
+  if (persons.find(p => p.name === name)) {
+    res.status(400).json({ error: 'name must be unique' });
+  }
+  else if (name && number) {
     const entry = { name, number };
     const id = Math.floor(Math.random() * 10000000);
     entry.id = id;
